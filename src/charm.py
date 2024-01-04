@@ -15,7 +15,6 @@ https://juju.is/docs/sdk/create-a-minimal-kubernetes-charm
 import logging
 import shlex
 import subprocess
-from subprocess import Popen
 
 import ops
 from ops import MaintenanceStatus, ActiveStatus
@@ -23,7 +22,6 @@ from ops import MaintenanceStatus, ActiveStatus
 logger = logging.getLogger(__name__)
 
 VALID_LOG_LEVELS = ["info", "debug", "warning", "error", "critical"]
-
 
 
 class IntroToCharmingMcCharm(ops.CharmBase):
