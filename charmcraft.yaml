@@ -23,7 +23,13 @@ bases:
     - name: ubuntu
       channel: "22.04"
 
-#
+
+provides:
+  cos-agent:
+    interface: cos_agent
+    limit: 1
+    description: Observability endpoint to integrate with the cos-agent charm.
+
 #config:
 #  options:
 #    # An example config option to customise the log level of the workload

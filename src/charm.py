@@ -19,9 +19,9 @@ import subprocess
 import ops
 from ops import MaintenanceStatus, ActiveStatus
 
-logger = logging.getLogger(__name__)
+from charms.grafana_agent.v0.cos_agent import COSAgentProvider
 
-VALID_LOG_LEVELS = ["info", "debug", "warning", "error", "critical"]
+logger = logging.getLogger(__name__)
 
 
 class IntroToCharmingMcCharm(ops.CharmBase):
@@ -30,6 +30,17 @@ class IntroToCharmingMcCharm(ops.CharmBase):
     def __init__(self, *args):
         super().__init__(*args)
         self.framework.observe(self.on.install, self._on_install)
+
+        self._grafana_agent = COSAgentProvider(
+            self,
+            relation_name="cos-agent",
+            metrics_endpoints=[
+                {"path": "/metrics", "port": 80},
+            ],
+            # alert rules from https://samber.github.io/awesome-prometheus-alerts/rules.html#nginx
+            metrics_rules_dir="./src/alert_rules/prometheus",
+            # tails varlog by default
+        )
 
     def _run_local(*args, **kwargs):
         # to facilitate mocking in test code
