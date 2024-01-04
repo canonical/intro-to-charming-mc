@@ -14,6 +14,7 @@ https://juju.is/docs/sdk/create-a-minimal-kubernetes-charm
 
 import logging
 import shlex
+import subprocess
 from subprocess import Popen
 
 import ops
@@ -24,12 +25,17 @@ logger = logging.getLogger(__name__)
 VALID_LOG_LEVELS = ["info", "debug", "warning", "error", "critical"]
 
 
+
 class IntroToCharmingMcCharm(ops.CharmBase):
     """Charm the service."""
 
     def __init__(self, *args):
         super().__init__(*args)
         self.framework.observe(self.on.install, self._on_install)
+
+    def _run_local(*args, **kwargs):
+        # to facilitate mocking in test code
+        return subprocess.Popen(*args, **kwargs).wait()
 
     def _on_install(self, event):
         self._install_nginx()  # this will also start it by default
@@ -44,33 +50,28 @@ class IntroToCharmingMcCharm(ops.CharmBase):
             "apt install nginx",
         )
         for line in script:
-            proc = Popen(shlex.split(line))
-            proc.wait()
+            self._run_local(shlex.split(line))
 
     def _enable_nginx_firewall_profile(self):
         self.unit.status = MaintenanceStatus("setting up ufw rules...")
 
-        proc = Popen(shlex.split("ufw allow 'Nginx HTTP'"))
-        proc.wait()
+        self._run_local(shlex.split("ufw allow 'Nginx HTTP'"))
 
     def _start_nginx(self, restart: bool = False):
         self.unit.status = MaintenanceStatus("starting nginx...")
 
         verb = "restart" if restart else "start"
-        proc = Popen(shlex.split(f"systemctl {verb} nginx"))
-        proc.wait()
+        self._run_local(shlex.split(f"systemctl {verb} nginx"))
 
     def _reload_nginx(self):
         self.unit.status = MaintenanceStatus("reloading nginx...")
 
-        proc = Popen(shlex.split(f"systemctl reload nginx"))
-        proc.wait()
+        self._run_local(shlex.split(f"systemctl reload nginx"))
 
     def _stop_nginx(self):
         self.unit.status = MaintenanceStatus("stopping nginx...")
 
-        proc = Popen(shlex.split(f"systemctl stop nginx"))
-        proc.wait()
+        self._run_local(shlex.split(f"systemctl stop nginx"))
 
 
 if __name__ == "__main__":
