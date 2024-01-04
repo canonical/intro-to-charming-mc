@@ -34,10 +34,10 @@ class IntroToCharmingMcCharm(ops.CharmBase):
     def _on_install(self, event):
         self._install_nginx()  # this will also start it by default
         self._enable_nginx_firewall_profile()
-        self.status = ActiveStatus()
+        self.unit.status = ActiveStatus()
 
     def _install_nginx(self):
-        self.status = MaintenanceStatus("installing nginx...")
+        self.unit.status = MaintenanceStatus("installing nginx...")
 
         script = (
             "apt update",
@@ -48,26 +48,26 @@ class IntroToCharmingMcCharm(ops.CharmBase):
             proc.wait()
 
     def _enable_nginx_firewall_profile(self):
-        self.status = MaintenanceStatus("setting up ufw rules...")
+        self.unit.status = MaintenanceStatus("setting up ufw rules...")
 
         proc = Popen(shlex.split("ufw allow 'Nginx HTTP'"))
         proc.wait()
 
     def _start_nginx(self, restart: bool = False):
-        self.status = MaintenanceStatus("starting nginx...")
+        self.unit.status = MaintenanceStatus("starting nginx...")
 
         verb = "restart" if restart else "start"
         proc = Popen(shlex.split(f"systemctl {verb} nginx"))
         proc.wait()
 
     def _reload_nginx(self):
-        self.status = MaintenanceStatus("reloading nginx...")
+        self.unit.status = MaintenanceStatus("reloading nginx...")
 
         proc = Popen(shlex.split(f"systemctl reload nginx"))
         proc.wait()
 
     def _stop_nginx(self):
-        self.status = MaintenanceStatus("stopping nginx...")
+        self.unit.status = MaintenanceStatus("stopping nginx...")
 
         proc = Popen(shlex.split(f"systemctl stop nginx"))
         proc.wait()
