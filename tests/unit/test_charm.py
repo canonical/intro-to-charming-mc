@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 import ops
 import pytest
 from charm import IntroToCharmingMcCharm
-from scenario import State, Context
+from scenario import Context, State
 
 
 @pytest.fixture
@@ -11,9 +11,7 @@ def ctx():
     procmock = MagicMock()
     procmock.wait = lambda: True
 
-    with patch.object(IntroToCharmingMcCharm,
-                      "_run_local",
-                      return_value=procmock):
+    with patch.object(IntroToCharmingMcCharm, "_run_local", return_value=procmock):
         yield Context(IntroToCharmingMcCharm)
 
 
@@ -29,4 +27,3 @@ def test_install_status(ctx):
     ]
 
     assert state_out.unit_status == ops.ActiveStatus()
-

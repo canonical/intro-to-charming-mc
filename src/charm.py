@@ -15,10 +15,9 @@ https://juju.is/docs/sdk/create-a-minimal-kubernetes-charm
 import logging
 import shlex
 import subprocess
-from subprocess import Popen
 
 import ops
-from ops import MaintenanceStatus, ActiveStatus
+from ops import ActiveStatus, MaintenanceStatus
 
 logger = logging.getLogger(__name__)
 
@@ -65,12 +64,12 @@ class IntroToCharmingMcCharm(ops.CharmBase):
     def _reload_nginx(self):
         self.unit.status = MaintenanceStatus("reloading nginx...")
 
-        self._run_local(shlex.split(f"systemctl reload nginx"))
+        self._run_local(shlex.split("systemctl reload nginx"))
 
     def _stop_nginx(self):
         self.unit.status = MaintenanceStatus("stopping nginx...")
 
-        self._run_local(shlex.split(f"systemctl stop nginx"))
+        self._run_local(shlex.split("systemctl stop nginx"))
 
 
 if __name__ == "__main__":
