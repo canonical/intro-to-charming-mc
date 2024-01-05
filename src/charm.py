@@ -25,7 +25,6 @@ logger = logging.getLogger(__name__)
 VALID_LOG_LEVELS = ["info", "debug", "warning", "error", "critical"]
 
 
-
 class IntroToCharmingMcCharm(ops.CharmBase):
     """Charm the service."""
 
