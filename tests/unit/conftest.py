@@ -1,9 +1,8 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-from scenario import Context
-
 from charm import IntroToCharmingMcCharm
+from scenario import Context
 
 
 @pytest.fixture

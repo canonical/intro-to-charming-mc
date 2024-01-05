@@ -2,7 +2,7 @@
 """
 import logging
 import socket
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 import ops
 
@@ -18,7 +18,7 @@ LIBAPI = 0
 # to 0 if you are raising the major API version
 LIBPATCH = 1
 
-DEFAULT_ENDPOINT = "ingress_demo"
+DEFAULT_ENDPOINT = "demo-ingress"
 
 
 class IngressProvider:
@@ -30,7 +30,7 @@ class IngressProvider:
     def relations(self) -> List[ops.Relation]:
         return self._charm.model.relations[self._endpoint_name]
 
-    def requests(self) -> List[Tuple[str, int]]:
+    def requests(self) -> List[Tuple[ops.Relation, Tuple[str, int]]]:
         reqs = []
 
         for relation in self.relations:
@@ -51,9 +51,12 @@ class IngressProvider:
                 logger.error(f"failed validating databag contents for {relation}", exc_info=True)
                 continue
 
-            reqs.append((host, port))
+            reqs.append((relation, (host, port)))
 
         return reqs
+
+    def respond(self, relation: ops.Relation, url: str):
+        relation.data[self._charm.app]['url'] = url
 
 
 class IngressRequirer:
@@ -67,5 +70,12 @@ class IngressRequirer:
 
     def request(self, port: int, host: str = None):
         host = host or socket.getfqdn()
-        self.relation.data[self._charm.app]['port'] = str(port)
-        self.relation.data[self._charm.app]['host'] = str(host)
+        if relation := self.relation:
+            relation.data[self._charm.app]['port'] = str(port)
+            relation.data[self._charm.app]['host'] = str(host)
+
+    @property
+    def response(self) -> Optional[str]:
+        if relation := self.relation:
+            return relation.data[relation.app].get('url')
+        return None
