@@ -1,18 +1,5 @@
-from unittest.mock import MagicMock, patch
-
 import ops
-import pytest
-from charm import IntroToCharmingMcCharm
-from scenario import Context, State
-
-
-@pytest.fixture
-def ctx():
-    procmock = MagicMock()
-    procmock.wait = lambda: True
-
-    with patch.object(IntroToCharmingMcCharm, "_run_local", return_value=procmock):
-        yield Context(IntroToCharmingMcCharm)
+from scenario import State
 
 
 def test_install_status(ctx):
