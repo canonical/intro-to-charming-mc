@@ -1,0 +1,36 @@
+# This file configures Charmcraft.
+# See https://juju.is/docs/sdk/charmcraft-config for guidance.
+
+# (Required)
+name: intro-to-charming-mc-tester
+
+
+# (Required)
+type: charm
+
+
+# (Recommended)
+title: Tester for intro-to-charming-mc charm
+
+
+# (Required)
+summary: Foo
+
+
+# (Required)
+description: Bar
+
+# (Required for 'charm' type)
+bases:
+  - build-on:
+    - name: ubuntu
+      channel: "22.04"
+    run-on:
+    - name: ubuntu
+      channel: "22.04"
+
+
+requires:
+  demo-ingress:
+    interface: demo_ingress
+    limit: 1
