@@ -17,7 +17,7 @@ import shlex
 import subprocess
 
 import ops
-from ops import MaintenanceStatus, ActiveStatus
+from ops import ActiveStatus, MaintenanceStatus
 
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
 
@@ -42,7 +42,7 @@ class IntroToCharmingMcCharm(ops.CharmBase):
             # tails varlog by default
         )
 
-    def _run_local(*args, **kwargs):
+    def _run_local(self, *args, **kwargs):
         # to facilitate mocking in test code
         return subprocess.Popen(*args, **kwargs).wait()
 
@@ -75,12 +75,12 @@ class IntroToCharmingMcCharm(ops.CharmBase):
     def _reload_nginx(self):
         self.unit.status = MaintenanceStatus("reloading nginx...")
 
-        self._run_local(shlex.split(f"systemctl reload nginx"))
+        self._run_local(shlex.split("systemctl reload nginx"))
 
     def _stop_nginx(self):
         self.unit.status = MaintenanceStatus("stopping nginx...")
 
-        self._run_local(shlex.split(f"systemctl stop nginx"))
+        self._run_local(shlex.split("systemctl stop nginx"))
 
 
 if __name__ == "__main__":

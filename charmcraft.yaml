@@ -30,6 +30,9 @@ provides:
     limit: 1
     description: Observability endpoint to integrate with the cos-agent charm.
 
+  demo-ingress:
+    interface: demo_ingress
+
 #config:
 #  options:
 #    # An example config option to customise the log level of the workload
