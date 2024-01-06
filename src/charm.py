@@ -31,7 +31,7 @@ class IntroToCharmingMcCharm(ops.CharmBase):
         super().__init__(*args)
         self.framework.observe(self.on.install, self._on_install)
 
-    def _run_local(*args, **kwargs):
+    def _run_local(self, *args, **kwargs):
         # to facilitate mocking in test code
         return subprocess.Popen(*args, **kwargs).wait()
 
