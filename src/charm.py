@@ -44,8 +44,8 @@ class IntroToCharmingMcCharm(ops.CharmBase):
         self.unit.status = MaintenanceStatus("installing nginx...")
 
         script = (
-            "apt update",
-            "apt install nginx",
+            "apt-get update -y",
+            "apt-get install -y nginx",
         )
         for line in script:
             self._run_local(shlex.split(line))
