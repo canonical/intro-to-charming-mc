@@ -23,6 +23,10 @@ bases:
     - name: ubuntu
       channel: "22.04"
 
+
+provides:
+  demo-ingress:
+    interface: demo_ingress
 #
 #config:
 #  options:

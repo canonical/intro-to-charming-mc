@@ -19,8 +19,10 @@ def test_install_status(ctx, procmock):
 
     procmock.assert_called()
     procmock.assert_has_calls(
-       (call(['apt-get', 'update', '-y']),
-        call(['apt-get', 'install', '-y', 'nginx']),
-        call(['ufw', 'allow', 'Nginx HTTP']),
-        ), any_order=True
+        (
+            call(["apt-get", "update", "-y"]),
+            call(["apt-get", "install", "-y", "nginx"]),
+            call(["ufw", "allow", "Nginx HTTP"]),
+        ),
+        any_order=True,
     )
