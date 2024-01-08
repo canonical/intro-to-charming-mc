@@ -1,0 +1,6 @@
+parts/
+prime/
+stage/
+.tox/
+*.charm
+*__pycache__

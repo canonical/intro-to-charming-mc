@@ -1,0 +1,36 @@
+# This file configures Charmcraft.
+# See https://juju.is/docs/sdk/charmcraft-config for guidance.
+
+# (Required)
+# The charm package name, no spaces
+# See https://juju.is/docs/sdk/naming#heading--naming-charms for guidance.
+name: intro-to-charming-mc
+
+type: charm
+
+title: Charm Template
+summary: This is a DEMO charm that deploys and operates nginx on ubuntu machines.
+
+# (Required)
+description: Same as summary.
+
+
+bases:
+  - build-on:
+    - name: ubuntu
+      channel: "22.04"
+    run-on:
+    - name: ubuntu
+      channel: "22.04"
+
+#
+#config:
+#  options:
+#    # An example config option to customise the log level of the workload
+#    log-level:
+#      description: |
+#        Configures the log level of gunicorn.
+#
+#        Acceptable values are: "info", "debug", "warning", "error" and "critical"
+#      default: "info"
+#      type: string
