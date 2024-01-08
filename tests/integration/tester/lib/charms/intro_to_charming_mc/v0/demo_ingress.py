@@ -1,5 +1,4 @@
-"""Demo library to offer demo ingress integrations for intro-to-charming-mc nginx charm.
-"""
+"""Demo library to offer demo ingress integrations for intro-to-charming-mc nginx charm."""
 import logging
 import socket
 from typing import List, Optional, Tuple
