@@ -17,12 +17,11 @@ import shlex
 import subprocess
 
 import ops
+from charms.grafana_agent.v0.cos_agent import COSAgentProvider
 from charms.intro_to_charming_mc.v0.demo_ingress import IngressProvider
 from ops import ActiveStatus, MaintenanceStatus
 
 logger = logging.getLogger(__name__)
-
-VALID_LOG_LEVELS = ["info", "debug", "warning", "error", "critical"]
 
 
 class IntroToCharmingMcCharm(ops.CharmBase):
@@ -35,6 +34,17 @@ class IntroToCharmingMcCharm(ops.CharmBase):
         super().__init__(*args)
         self.framework.observe(self.on.install, self._on_install)
         self.ingress_provider = IngressProvider(self)
+
+        self._grafana_agent = COSAgentProvider(
+            self,
+            relation_name="cos-agent",
+            metrics_endpoints=[
+                {"path": "/metrics", "port": 80},
+            ],
+            # alert rules from https://samber.github.io/awesome-prometheus-alerts/rules.html#nginx
+            metrics_rules_dir="./src/alert_rules/prometheus",
+            # tails varlog by default
+        )
 
         for event in self.on.events().values():
             if event.event_kind in {"collect_unit_status", "collect_app_status"}:
@@ -62,8 +72,7 @@ class IntroToCharmingMcCharm(ops.CharmBase):
         active_msg = "" if n_ingresses == 0 else f"ingressing {n_ingresses} units"
         self.unit.status = ActiveStatus(active_msg)
 
-    @staticmethod
-    def _configure_nginx_to_route(url: str, host: str, port: int):
+    def _configure_nginx_to_route(self, url: str, host: str, port: int):
         # in reality, here we would actually configure nginx
         logger.info(f"(pretend we) configured nginx to route traffic from {url} to {host}:{port}")
 
